@@ -1,8 +1,8 @@
-# Blender QMM (Quick Metal Materials)
+# Blender Node Wrangler
 
-Blender Addon to Add Metal Materials to Your Scene
+Customized Version of Node Wrangler Add-on
 
-![Blender QMM Screenshot](https://github.com/don1138/blender-qmm/blob/main/blender-qmm.jpg)
+![Blender Node Wrangler Screenshot](https://github.com/don1138/blender-node-wrangler/blob/main/add-principled-setup.gif)
 
 ## Installation
 
