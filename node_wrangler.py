@@ -19,7 +19,7 @@
 bl_info = {
     "name": "Node Wrangler",
     "author": "Bartek Skorupa, Greg Zaal, Sebastian Koenig, Christian Brinkmann, Florian Meyer",
-    "version": (3, 38),
+    "version": (3, 38, 1),
     "blender": (2, 93, 0),
     "location": "Node Editor Toolbar or Shift-W",
     "description": "Various tools to enhance and speed up node-based workflow",
@@ -1119,7 +1119,7 @@ def get_output_location(tree):
 class NWPrincipledPreferences(bpy.types.PropertyGroup):
     base_color: StringProperty(
         name='Base Color',
-        default='diffuse diff albedo base col color',
+        default='diffuse diff dif albedo base col color basecolor',
         description='Naming Components for Base Color maps')
     sss_color: StringProperty(
         name='Subsurface Color',
@@ -3109,12 +3109,12 @@ class NWAddTextureSetup(Operator, NWBase):
                         break
             if valid:
                 locx = t_node.location.x
-                locy = t_node.location.y - t_node.dimensions.y/2
+                locy = t_node.location.y
 
                 xoffset = [500, 700]
                 is_texture = False
                 if t_node.type in texture_types + ['MAPPING']:
-                    xoffset = [290, 500]
+                    xoffset = [200, 400]
                     is_texture = True
 
                 coordout = 2
@@ -3127,7 +3127,7 @@ class NWAddTextureSetup(Operator, NWBase):
 
                 if not is_texture:
                     tex = nodes.new(image_type)
-                    tex.location = [locx - 200, locy + 112]
+                    tex.location = [locx - 300, locy]
                     nodes.active = tex
                     links.new(tex.outputs[0], t_node.inputs[input_index])
 
@@ -3135,12 +3135,12 @@ class NWAddTextureSetup(Operator, NWBase):
                 if self.add_mapping or is_texture:
                     if t_node.type != 'MAPPING':
                         m = nodes.new('ShaderNodeMapping')
-                        m.location = [locx - xoffset[0], locy + 141]
-                        m.width = 240
+                        m.location = [locx - xoffset[0], locy]
+                        m.width = 140
                     else:
                         m = t_node
                     coord = nodes.new('ShaderNodeTexCoord')
-                    coord.location = [locx - (200 if t_node.type == 'MAPPING' else xoffset[1]), locy + 124]
+                    coord.location = [locx - (200 if t_node.type == 'MAPPING' else xoffset[1]), locy]
 
                     if not is_texture:
                         links.new(m.outputs[0], tex.inputs[0])
@@ -3298,7 +3298,8 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
 
                 # Add displacement offset nodes
                 disp_node = nodes.new(type='ShaderNodeDisplacement')
-                disp_node.location = active_node.location + Vector((0, -560))
+                disp_node.inputs[2].default_value = 0.1
+                disp_node.location = active_node.location + Vector((0, -700))
                 link = links.new(disp_node.inputs[0], disp_texture.outputs[0])
 
                 # TODO Turn on true displacement in the material
@@ -3375,7 +3376,7 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
 
         # Alignment
         for i, texture_node in enumerate(texture_nodes):
-            offset = Vector((-550, (i * -280) + 200))
+            offset = Vector((-500, (i * -280) + 200))
             texture_node.location = active_node.location + offset
 
         if normal_node:
@@ -3388,13 +3389,13 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
 
         # Add texture input + mapping
         mapping = nodes.new(type='ShaderNodeMapping')
-        mapping.location = active_node.location + Vector((-1050, 0))
+        mapping.location = active_node.location + Vector((-900, 0))
         if len(texture_nodes) > 1:
             # If more than one texture add reroute node in between
             reroute = nodes.new(type='NodeReroute')
             texture_nodes.append(reroute)
             tex_coords = Vector((texture_nodes[0].location.x, sum(n.location.y for n in texture_nodes)/len(texture_nodes)))
-            reroute.location = tex_coords + Vector((-50, -120))
+            reroute.location = tex_coords + Vector((-100, 96))
             for texture_node in texture_nodes:
                 link = links.new(texture_node.inputs[0], reroute.outputs[0])
             link = links.new(reroute.inputs[0], mapping.outputs[0])
@@ -3914,7 +3915,7 @@ class NWAddSequence(Operator, NWBase, ImportHelper):
         nodes_list = [node for node in nodes]
         if nodes_list:
             nodes_list.sort(key=lambda k: k.location.x)
-            xloc = nodes_list[0].location.x - 220  # place new nodes at far left
+            xloc = nodes_list[0].location.x - 200  # place new nodes at far left
             yloc = 0
             for node in nodes:
                 node.select = False
