@@ -2,7 +2,7 @@
 
 ### A Customized Version of Node Wrangler Add-On
 
-The default node positions were triggering my OCD, so I changed some of the node positions for a cleaner layout.
+The default node positions were triggering my OCD, so I changed some of the values for a cleaner layout.
 
 Some of my texture libraries used names missing from the add-on, so I added `dif` and `basecolor` to the `base_color` string property.
 
