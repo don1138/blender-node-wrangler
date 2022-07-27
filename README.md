@@ -19,6 +19,8 @@ Some of my texture libraries used names missing from the add-on, so I added `dif
 <br><br>
 
 <p align="center">
-  <img align="center" src="https://badges.pufler.dev/created/don1138/blender-node-wrangler?style=for-the-badge&colorA=222&colorB=48684b" alt="Repo Created">
-  <img align="center" src="https://badges.pufler.dev/updated/don1138/blender-node-wrangler?style=for-the-badge&colorA=222&colorB=48684b" alt="Repo Updated">
+  <img alt="GitHub latest commit" src="https://img.shields.io/github/last-commit/don1138/blender-node-wrangler">
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/don1138/blender-node-wrangler">
+  <img alt="Github all releases" src="https://img.shields.io/github/downloads/don1138/blender-node-wrangler/total.svg"><br>
+  <img src="https://repobeats.axiom.co/api/embed/086aa547d6ef4931d5a097e1be80a817b7499ff7.svg" alt="Repobeats analytics image">
 </p>
