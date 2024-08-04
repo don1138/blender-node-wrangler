@@ -4,7 +4,7 @@
 
 The default node positions were triggering my OCD, so I changed some of the values for a cleaner layout.
 
-Some of my texture libraries used names missing from the add-on, so I added `dif` and `basecolor` to the `base_color` string property.
+Some of my texture libraries use names missing from the add-on, so I've added `dif` and `basecolor` to the `base_color` string property.
 
 ## Screen Shots
 
