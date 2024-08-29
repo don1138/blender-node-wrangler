@@ -32,11 +32,7 @@ from .interface import NWConnectionListInputs, NWConnectionListOutputs
 from .utils.constants import blend_types, geo_combine_operations, operations, navs, get_texture_node_types, rl_outputs
 from .utils.draw import draw_callback_nodeoutline
 from .utils.paths import match_files_to_socket_names, split_into_components
-from .utils.nodes import (node_mid_pt, autolink, node_at_pos, get_nodes_links,
-                          get_group_output_node, get_output_location, force_update, get_internal_socket, nw_check,
-                          nw_check_not_empty, nw_check_selected, nw_check_active, nw_check_space_type,
-                          nw_check_node_type, nw_check_visible_outputs, nw_check_viewer_node, NWBase,
-                          get_first_enabled_output, is_visible_socket)
+from .utils.nodes import (node_mid_pt, autolink, node_at_pos, get_nodes_links, get_group_output_node, get_output_location, force_update, get_internal_socket, nw_check, nw_check_not_empty, nw_check_selected, nw_check_active, nw_check_space_type, nw_check_node_type, nw_check_visible_outputs, nw_check_viewer_node, NWBase, get_first_enabled_output, is_visible_socket)
 
 
 class NWLazyMix(Operator, NWBase):
@@ -246,9 +242,7 @@ class NWDeleteUnused(Operator, NWBase):
         default=True)
 
     def is_unused_node(self, node):
-        end_types = ['OUTPUT_MATERIAL', 'OUTPUT', 'VIEWER', 'COMPOSITE',
-                     'SPLITVIEWER', 'OUTPUT_FILE', 'LEVELS', 'OUTPUT_LIGHT',
-                     'OUTPUT_WORLD', 'GROUP_INPUT', 'GROUP_OUTPUT', 'FRAME']
+        end_types = ['OUTPUT_MATERIAL', 'OUTPUT', 'VIEWER', 'COMPOSITE', 'SPLITVIEWER', 'OUTPUT_FILE', 'LEVELS', 'OUTPUT_LIGHT', 'OUTPUT_WORLD', 'GROUP_INPUT', 'GROUP_OUTPUT', 'FRAME']
         if node.type in end_types:
             return False
 
@@ -1466,8 +1460,7 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
 
         match_files_to_socket_names(self.files, socketnames)
         # Remove socketnames without found files
-        socketnames = [s for s in socketnames if s[2]
-                       and path.exists(self.directory + s[2])]
+        socketnames = [s for s in socketnames if s[2] and path.exists(self.directory + s[2])]
         if not socketnames:
             self.report({'INFO'}, 'No matching images found')
             print('No matching images found')
@@ -1627,7 +1620,7 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
 
         # Alignment
         for i, texture_node in enumerate(texture_nodes):
-            offset = Vector((-550, (i * -280) + 200))
+            offset = Vector((-500, (i * -300) + 200))
             texture_node.location = active_node.location + offset
 
         if normal_node:
@@ -1644,14 +1637,13 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
 
         # Add texture input + mapping
         mapping = nodes.new(type='ShaderNodeMapping')
-        mapping.location = active_node.location + Vector((-1050, 0))
+        mapping.location = active_node.location + Vector((-800, 0))
         if len(texture_nodes) > 1:
             # If more than one texture add reroute node in between
             reroute = nodes.new(type='NodeReroute')
             texture_nodes.append(reroute)
-            tex_coords = Vector((texture_nodes[0].location.x,
-                                 sum(n.location.y for n in texture_nodes) / len(texture_nodes)))
-            reroute.location = tex_coords + Vector((-50, -120))
+            tex_coords = Vector((texture_nodes[0].location.x, sum(n.location.y for n in texture_nodes) / len(texture_nodes)))
+            reroute.location = tex_coords + Vector((-100, 0))
             for texture_node in texture_nodes:
                 link = connect_sockets(texture_node.inputs[0], reroute.outputs[0])
             link = connect_sockets(reroute.inputs[0], mapping.outputs[0])
@@ -1664,18 +1656,18 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
         link = connect_sockets(mapping.inputs[0], texture_input.outputs[2])
 
         # Create frame around tex coords and mapping
-        frame = nodes.new(type='NodeFrame')
-        frame.label = 'Mapping'
-        mapping.parent = frame
-        texture_input.parent = frame
-        frame.update()
+        # frame = nodes.new(type='NodeFrame')
+        # frame.label = 'Mapping'
+        # mapping.parent = frame
+        # texture_input.parent = frame
+        # frame.update()
 
         # Create frame around texture nodes
-        frame = nodes.new(type='NodeFrame')
-        frame.label = 'Textures'
-        for tnode in texture_nodes:
-            tnode.parent = frame
-        frame.update()
+        # frame = nodes.new(type='NodeFrame')
+        # frame.label = 'Textures'
+        # for tnode in texture_nodes:
+        #     tnode.parent = frame
+        # frame.update()
 
         # Just to be sure
         active_node.select = False
